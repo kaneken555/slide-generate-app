@@ -1,86 +1,86 @@
 # slide-generate-app
 
-AI-powered slide generation application with a three-layer architecture.
+3層アーキテクチャを採用したAI駆動のスライド生成アプリケーション
 
-## Overview / 概要
+## 概要
 
-This application automatically generates presentation slides from a given topic using AI/LLM services. It features a clean three-layer architecture with provider abstraction, capability services, and workflow orchestration.
+このアプリケーションは、AI/LLMサービスを使用して、指定されたトピックからプレゼンテーションスライドを自動生成します。プロバイダーの抽象化、機能サービス、ワークフローオーケストレーションを備えた、クリーンな3層アーキテクチャを特徴としています。
 
-## Features / 機能
+## 機能
 
-- **🔍 Automatic Research**: Gathers structured information about any topic using LLM knowledge
-- **📝 Outline Generation**: Creates well-structured slide outlines
-- **🎨 Slide Generation**: Generates presentation files (PPTX, PDF) from outlines
-- **🔄 Workflow Orchestration**: Automated end-to-end pipeline with retry and error handling
-- **🔌 Provider Abstraction**: Support for multiple LLM and slide generation providers
-- **📊 Observability**: Built-in tracing, metrics, and logging
-- **⚡ Production-Ready**: Includes retry logic, error mapping, and timeout handling
+- **🔍 自動リサーチ**: LLMの知識を使用して任意のトピックに関する構造化された情報を収集
+- **📝 アウトライン生成**: 適切に構造化されたスライドアウトラインを作成
+- **🎨 スライド生成**: アウトラインからプレゼンテーションファイル（PPTX、PDF）を生成
+- **🔄 ワークフローオーケストレーション**: リトライとエラーハンドリングを備えた自動エンドツーエンドパイプライン
+- **🔌 プロバイダー抽象化**: 複数のLLMおよびスライド生成プロバイダーをサポート
+- **📊 可観測性**: トレーシング、メトリクス、ロギングを組み込み
+- **⚡ プロダクションレディ**: リトライロジック、エラーマッピング、タイムアウト処理を含む
 
-## Architecture / アーキテクチャ
+## アーキテクチャ
 
-The application follows a three-layer architecture:
+このアプリケーションは3層アーキテクチャに従っています：
 
 ```
 ┌─────────────────────────────────────┐
-│     Orchestrator Layer              │
+│     オーケストレーター層              │
 │  - WorkflowBase                     │
 │  - SlideGenerationWorkflow          │
-│  - Step management & data flow      │
+│  - ステップ管理とデータフロー         │
 └─────────────────┬───────────────────┘
                   │
 ┌─────────────────▼───────────────────┐
-│     Capability Layer                │
+│     Capability層                    │
 │  - ResearchService                  │
 │  - RefineService                    │
 │  - SlideGenService                  │
-│  - Business logic abstraction       │
+│  - ビジネスロジックの抽象化           │
 └─────────────────┬───────────────────┘
                   │
 ┌─────────────────▼───────────────────┐
-│     Provider Layer                  │
+│     Provider層                      │
 │  - OpenAI (gpt-4o-mini)            │
-│  - Ollama (local LLM)              │
-│  - Presenton (slide generation)    │
-│  - HTTP client & error handling    │
+│  - Ollama (ローカルLLM)             │
+│  - Presenton (スライド生成)         │
+│  - HTTPクライアントとエラーハンドリング│
 └─────────────────────────────────────┘
 ```
 
-## Requirements / 必要要件
+## 必要要件
 
 - Python 3.12+
-- OpenAI API key (for LLM features)
-- Presenton server (for slide generation)
+- OpenAI APIキー（LLM機能用）
+- Presentonサーバー（スライド生成用）
 
-## Installation / インストール
+## インストール
 
-1. Clone the repository:
+1. リポジトリをクローン：
 ```bash
 git clone https://github.com/yourusername/slide-generate-app.git
 cd slide-generate-app
 ```
 
-2. Create and activate virtual environment:
+2. 仮想環境を作成して有効化：
 ```bash
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source venv/bin/activate  # Windowsの場合: venv\Scripts\activate
 ```
 
-3. Install dependencies:
+3. 依存関係をインストール：
 ```bash
 pip install -r requirements.txt
 ```
 
-4. Set up environment variables:
+4. 環境変数を設定：
 ```bash
-# Create .env file
+# .envファイルを作成
 echo "OPENAI_API_KEY=your-api-key-here" > .env
 ```
 
-## Quick Start / クイックスタート
+## クイックスタート
 
-### Option 1: Using Orchestrator (Recommended) / オーケストレーター使用（推奨）
+### 方法1: オーケストレーターを使用（推奨）
 
-The orchestrator runs the complete pipeline automatically:
+オーケストレーターは完全なパイプラインを自動的に実行します：
 
 ```python
 from provider.types import ExecCtx
@@ -101,18 +101,18 @@ slidegen_svc = SlideGenService(presenton)
 
 workflow = SlideGenerationWorkflow(research_svc, refine_svc, slidegen_svc)
 
-# Execute
+# 実行
 ctx = ExecCtx(request_id="req-1", trace_id="trace-1", timeout_ms=180000)
 result = await workflow.execute({
-    "topic": "Machine Learning Fundamentals",
+    "topic": "機械学習の基礎",
     "n_slides": 5,
     "language": "Japanese"
 }, ctx)
 
-print(f"Presentation: {result['result']['file_path']}")
+print(f"プレゼンテーション: {result['result']['file_path']}")
 ```
 
-### Option 2: Using Capability Services Directly / Capabilityサービス直接使用
+### 方法2: Capabilityサービスを直接使用
 
 ```python
 from provider.openai import OpenAIProvider
@@ -123,14 +123,14 @@ service = RefineService(provider)
 
 ctx = ExecCtx(request_id="req-1", trace_id="trace-1")
 result = await service.execute({
-    "topic": "Python Basics",
+    "topic": "Pythonの基礎",
     "n_slides": 5
 }, ctx)
 
 print(result["outline"])
 ```
 
-### Option 3: Using Providers Directly / Provider直接使用
+### 方法3: Providerを直接使用
 
 ```python
 from provider.openai import OpenAIProvider
@@ -139,113 +139,113 @@ provider = OpenAIProvider()
 ctx = ExecCtx(request_id="req-1", trace_id="trace-1")
 
 result = await provider.generate({
-    "text": "Explain quantum computing",
+    "text": "量子コンピューティングについて説明してください",
     "temperature": 0.3
 }, ctx)
 
 print(result["content"])
 ```
 
-## Examples / 実行例
+## 実行例
 
-The `examples/` directory contains various test scripts:
+`examples/` ディレクトリには様々なテストスクリプトが含まれています：
 
-### Orchestrator Layer / オーケストレーター層
-- `orchestrator_smoke.py` - Full workflow orchestration test
-- `full_pipeline.py` - Complete pipeline with detailed output
+### オーケストレーター層
+- `orchestrator_smoke.py` - 完全なワークフローオーケストレーションのテスト
+- `full_pipeline.py` - 詳細な出力を含む完全なパイプライン
 
-### Capability Layer / Capability層
-- `service_smoke.py` - Individual capability service tests
-- `research_smoke.py` - Research service with different depth levels
-- `integration_service_pipeline.py` - Service-level pipeline integration
+### Capability層
+- `service_smoke.py` - 個別のCapabilityサービスのテスト
+- `research_smoke.py` - 異なる深度レベルのリサーチサービス
+- `integration_service_pipeline.py` - サービスレベルのパイプライン統合
 
-### Provider Layer / Provider層
-- `openai_smoke.py` - OpenAI provider test
-- `ollama_smoke.py` - Ollama (local LLM) test
-- `presenton_local_test.py` - Presenton slide generation test
-- `provider_smoke.py` - Basic provider functionality
+### Provider層
+- `openai_smoke.py` - OpenAI Providerのテスト
+- `ollama_smoke.py` - Ollama（ローカルLLM）のテスト
+- `presenton_local_test.py` - Presentonスライド生成のテスト
+- `provider_smoke.py` - 基本的なProvider機能
 
-### Running Examples / 実行方法
+### 実行方法
 
 ```bash
-# Orchestrator test (full pipeline)
+# オーケストレーターテスト（完全なパイプライン）
 python -m examples.orchestrator_smoke
 
-# Individual service tests
+# 個別サービステスト
 python -m examples.service_smoke
 
-# Research-focused test
+# リサーチに焦点を当てたテスト
 python -m examples.research_smoke
 
-# Provider tests
+# Providerテスト
 python -m examples.openai_smoke
 ```
 
-## Configuration / 設定
+## 設定
 
-### Environment Variables / 環境変数
+### 環境変数
 
-- `OPENAI_API_KEY` - OpenAI API key (required)
-- `OLLAMA_BASE` - Ollama base URL (default: http://localhost:11434)
-- `OLLAMA_MODEL` - Ollama model name (default: llama3:8b)
-- `PRESENTON_API_KEY` - Presenton API key (if needed)
+- `OPENAI_API_KEY` - OpenAI APIキー（必須）
+- `OLLAMA_BASE` - Ollama ベースURL（デフォルト: http://localhost:11434）
+- `OLLAMA_MODEL` - Ollama モデル名（デフォルト: llama3:8b）
+- `PRESENTON_API_KEY` - Presenton APIキー（必要に応じて）
 
-### Presenton Setup / Presentonセットアップ
+### Presentonセットアップ
 
-The slide generation feature requires a running Presenton server:
+スライド生成機能には実行中のPresentonサーバーが必要です：
 
 ```bash
-# Default endpoint: http://localhost:5001
-# See Presenton documentation for setup instructions
+# デフォルトエンドポイント: http://localhost:5001
+# セットアップ手順についてはPresentonドキュメントを参照してください
 ```
 
-## Project Structure / プロジェクト構造
+## プロジェクト構造
 
 ```
 slide-generate-app/
-├── provider/                    # Provider layer
-│   ├── types.py                # Base types and interfaces
-│   ├── openai/                 # OpenAI provider
-│   ├── ollama/                 # Ollama provider
-│   ├── presenton/              # Presenton provider
-│   └── core/                   # Core utilities
-│       ├── transport/          # HTTP client
-│       ├── error_map/          # Error taxonomy
-│       ├── backoff/            # Retry logic
-│       ├── trace/              # Tracing
-│       └── metrics/            # Metrics
-├── ai_service/                  # Capability layer
+├── provider/                    # Provider層
+│   ├── types.py                # 基本型とインターフェース
+│   ├── openai/                 # OpenAI Provider
+│   ├── ollama/                 # Ollama Provider
+│   ├── presenton/              # Presenton Provider
+│   └── core/                   # コアユーティリティ
+│       ├── transport/          # HTTPクライアント
+│       ├── error_map/          # エラー分類
+│       ├── backoff/            # リトライロジック
+│       ├── trace/              # トレーシング
+│       └── metrics/            # メトリクス
+├── ai_service/                  # Capability層
 │   └── capabilities/
-│       ├── capability_base.py  # Base class
-│       ├── research_service.py # Research capability
-│       ├── refine_service.py   # Refine capability
-│       └── slidegen_service.py # Slide gen capability
-├── orchestrator/                # Orchestrator layer
+│       ├── capability_base.py  # ベースクラス
+│       ├── research_service.py # リサーチ機能
+│       ├── refine_service.py   # アウトライン生成機能
+│       └── slidegen_service.py # スライド生成機能
+├── orchestrator/                # オーケストレーター層
 │   └── runtime/
-│       ├── workflow_base.py              # Workflow base class
-│       └── slide_generation_workflow.py  # Slide generation workflow
-└── examples/                    # Example scripts
+│       ├── workflow_base.py              # ワークフローベースクラス
+│       └── slide_generation_workflow.py  # スライド生成ワークフロー
+└── examples/                    # サンプルスクリプト
 ```
 
-## API Documentation / API仕様
+## API仕様
 
 ### ResearchService
 
-Gathers structured information about a topic using LLM knowledge.
+LLMの知識を使用してトピックに関する構造化された情報を収集します。
 
-**Input:**
+**入力：**
 ```python
 {
-    "topic": str,              # Research topic
-    "language": str,           # Output language (default: "Japanese")
-    "depth": str,              # "basic", "medium", or "detailed"
-    "focus_areas": List[str],  # Optional focus areas
-    "temperature": float,      # Generation temperature (default: 0.3)
-    "max_tokens": int          # Max tokens (default: 1000)
+    "topic": str,              # リサーチトピック
+    "language": str,           # 出力言語（デフォルト: "Japanese"）
+    "depth": str,              # "basic"、"medium"、または "detailed"
+    "focus_areas": List[str],  # オプションのフォーカスエリア
+    "temperature": float,      # 生成温度（デフォルト: 0.3）
+    "max_tokens": int          # 最大トークン数（デフォルト: 1000）
 }
 ```
 
-**Output:**
+**出力：**
 ```python
 {
     "topic": str,
@@ -258,21 +258,21 @@ Gathers structured information about a topic using LLM knowledge.
 
 ### RefineService
 
-Creates structured slide outlines from topics.
+トピックから構造化されたスライドアウトラインを作成します。
 
-**Input:**
+**入力：**
 ```python
 {
-    "topic": str,                    # Slide topic
-    "n_slides": int,                 # Number of slides (1-50)
-    "language": str,                 # Output language
-    "temperature": float,            # Generation temperature
-    "max_tokens": int,               # Max tokens
-    "custom_instructions": str       # Optional custom instructions
+    "topic": str,                    # スライドトピック
+    "n_slides": int,                 # スライド数（1-50）
+    "language": str,                 # 出力言語
+    "temperature": float,            # 生成温度
+    "max_tokens": int,               # 最大トークン数
+    "custom_instructions": str       # オプションのカスタム指示
 }
 ```
 
-**Output:**
+**出力：**
 ```python
 {
     "outline": str,
@@ -282,20 +282,20 @@ Creates structured slide outlines from topics.
 
 ### SlideGenService
 
-Generates presentation files from outline text.
+アウトラインテキストからプレゼンテーションファイルを生成します。
 
-**Input:**
+**入力：**
 ```python
 {
-    "content": str,       # Outline text
-    "n_slides": int,      # Number of slides (1-100)
-    "language": str,      # Language
-    "template": str,      # Template name (default: "general")
-    "export_as": str      # Export format (default: "pptx")
+    "content": str,       # アウトラインテキスト
+    "n_slides": int,      # スライド数（1-100）
+    "language": str,      # 言語
+    "template": str,      # テンプレート名（デフォルト: "general"）
+    "export_as": str      # エクスポート形式（デフォルト: "pptx"）
 }
 ```
 
-**Output:**
+**出力：**
 ```python
 {
     "presentation_id": str,
@@ -307,27 +307,27 @@ Generates presentation files from outline text.
 
 ### SlideGenerationWorkflow
 
-Complete orchestrated workflow: Research → Refine → SlideGen
+完全なオーケストレーションワークフロー: Research → Refine → SlideGen
 
-**Input:**
+**入力：**
 ```python
 {
     "topic": str,
     "n_slides": int,
-    "language": str,           # default: "Japanese"
-    "research_depth": str,     # default: "medium"
-    "focus_areas": List[str],  # optional
-    "template": str,           # default: "general"
-    "export_as": str           # default: "pptx"
+    "language": str,           # デフォルト: "Japanese"
+    "research_depth": str,     # デフォルト: "medium"
+    "focus_areas": List[str],  # オプション
+    "template": str,           # デフォルト: "general"
+    "export_as": str           # デフォルト: "pptx"
 }
 ```
 
-**Output:**
+**出力：**
 ```python
 {
     "success": bool,
-    "steps": [...],           # Step execution details
-    "workflow": {...},        # Workflow metadata
+    "steps": [...],           # ステップ実行の詳細
+    "workflow": {...},        # ワークフローメタデータ
     "result": {
         "topic": str,
         "presentation_id": str,
@@ -337,86 +337,86 @@ Complete orchestrated workflow: Research → Refine → SlideGen
 }
 ```
 
-## Features in Detail / 詳細機能
+## 詳細機能
 
-### 1. Provider Layer / Provider層
+### 1. Provider層
 
-- **Abstraction**: Unified interface for different LLM and slide providers
-- **Error Mapping**: Standardized error codes across providers
-- **Retry Logic**: Exponential backoff with configurable retry policies
-- **HTTP Transport**: Async HTTP client with timeout and auth handling
-- **Observability**: Built-in tracing, metrics, and structured logging
+- **抽象化**: 異なるLLMおよびスライドプロバイダーの統一インターフェース
+- **エラーマッピング**: プロバイダー間で標準化されたエラーコード
+- **リトライロジック**: 設定可能なリトライポリシーによる指数バックオフ
+- **HTTPトランスポート**: タイムアウトと認証処理を備えた非同期HTTPクライアント
+- **可観測性**: トレーシング、メトリクス、構造化ロギングを組み込み
 
-### 2. Capability Layer / Capability層
+### 2. Capability層
 
-- **Business Logic**: High-level abstractions for common tasks
-- **Input Validation**: Pydantic-based request/response validation
-- **Prompt Management**: Centralized prompt templates
-- **Provider Agnostic**: Can switch providers without changing code
+- **ビジネスロジック**: 一般的なタスクの高レベル抽象化
+- **入力検証**: Pydanticベースのリクエスト/レスポンス検証
+- **プロンプト管理**: 一元化されたプロンプトテンプレート
+- **プロバイダー非依存**: コードを変更せずにプロバイダーを切り替え可能
 
-### 3. Orchestrator Layer / Orchestrator層
+### 3. オーケストレーター層
 
-- **Workflow Definition**: Declarative step-based workflows
-- **Data Flow**: Automatic data passing between steps
-- **Error Handling**: Step-level error handling and recovery
-- **Progress Tracking**: Detailed execution metrics per step
-- **Retry Support**: Configurable retry logic per step
+- **ワークフロー定義**: 宣言的なステップベースのワークフロー
+- **データフロー**: ステップ間の自動データ受け渡し
+- **エラーハンドリング**: ステップレベルのエラーハンドリングと回復
+- **進捗追跡**: ステップごとの詳細な実行メトリクス
+- **リトライサポート**: ステップごとに設定可能なリトライロジック
 
-## Development / 開発
+## 開発
 
-### Running Tests / テスト実行
+### テスト実行
 
 ```bash
-# Run all example tests
+# すべてのサンプルテストを実行
 python -m examples.orchestrator_smoke
 python -m examples.service_smoke
 python -m examples.research_smoke
 ```
 
-### Adding a New Provider / 新しいProviderの追加
+### 新しいProviderの追加
 
-1. Create a new provider class inheriting from `Provider`
-2. Implement `generate()` and/or `slide_gen()` methods
-3. Add provider-specific error mapping
-4. Test with smoke tests
+1. `Provider`を継承した新しいプロバイダークラスを作成
+2. `generate()`および/または`slide_gen()`メソッドを実装
+3. プロバイダー固有のエラーマッピングを追加
+4. スモークテストでテスト
 
-### Adding a New Capability / 新しいCapabilityの追加
+### 新しいCapabilityの追加
 
-1. Create a new service class inheriting from `CapabilityBase`
-2. Implement `execute()` and `_do_execute()` methods
-3. Define request/response models with Pydantic
-4. Add to workflow if needed
+1. `CapabilityBase`を継承した新しいサービスクラスを作成
+2. `execute()`および`_do_execute()`メソッドを実装
+3. Pydanticでリクエスト/レスポンスモデルを定義
+4. 必要に応じてワークフローに追加
 
-## Troubleshooting / トラブルシューティング
+## トラブルシューティング
 
-### OpenAI API Errors
+### OpenAI APIエラー
 
-- **401 Unauthorized**: Check `OPENAI_API_KEY` in `.env`
-- **429 Rate Limited**: Retry logic will handle this automatically
-- **Timeout**: Increase `timeout_ms` in `ExecCtx`
+- **401 Unauthorized**: `.env`ファイルの`OPENAI_API_KEY`を確認してください
+- **429 Rate Limited**: リトライロジックが自動的に処理します
+- **Timeout**: `ExecCtx`の`timeout_ms`を増やしてください
 
-### Presenton Connection Errors
+### Presenton接続エラー
 
-- Ensure Presenton server is running on `http://localhost:5001`
-- Check server logs for errors
-- Workflow will automatically retry once on failure
+- Presentonサーバーが`http://localhost:5001`で実行されていることを確認してください
+- サーバーログでエラーを確認してください
+- ワークフローは失敗時に自動的に1回リトライします
 
-### Ollama Errors
+### Ollamaエラー
 
-- Ensure Ollama is running: `ollama serve`
-- Check model is downloaded: `ollama pull llama3:8b`
-- Verify `OLLAMA_BASE` environment variable
+- Ollamaが実行されていることを確認してください：`ollama serve`
+- モデルがダウンロードされていることを確認してください：`ollama pull llama3:8b`
+- `OLLAMA_BASE`環境変数を確認してください
 
-## License / ライセンス
+## ライセンス
 
-[Your License Here]
+[ここにライセンスを記載]
 
-## Contributing / 貢献
+## 貢献
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+貢献を歓迎します！お気軽にプルリクエストを送信してください。
 
-## Acknowledgments / 謝辞
+## 謝辞
 
-- OpenAI for GPT models
-- Ollama for local LLM support
-- Presenton for slide generation capabilities
+- OpenAI - GPTモデルの提供
+- Ollama - ローカルLLMサポート
+- Presenton - スライド生成機能
